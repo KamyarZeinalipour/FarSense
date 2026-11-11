@@ -1,7 +1,8 @@
 # FarSense: A Comprehensive Commonsense Benchmark and Evaluation Framework for the Farsi Language
 
 [![Paper](https://img.shields.io/badge/IJCNLP--AACL_2025-paper-b31b1b)](https://aclanthology.org/2025.ijcnlp-long.187/)
-[![Dataset](https://img.shields.io/badge/%F0%9F%A4%97_Hugging_Face-CS__Farsi-yellow)](https://huggingface.co/datasets/Kamyar-zeinalipour/CS_Farsi)
+[![Dataset](https://img.shields.io/badge/%F0%9F%A4%97_Dataset-CS__Farsi-yellow)](https://huggingface.co/datasets/Kamyar-zeinalipour/CS_Farsi)
+[![Models](https://img.shields.io/badge/%F0%9F%A4%97_Collection-6_LoRA_adapters-orange)](https://huggingface.co/collections/Kamyar-zeinalipour/farsense-ijcnlp-aacl-2025-6af4553f756c4d246fe7f56c)
 [![Code license](https://img.shields.io/badge/code-Apache_2.0-blue)](LICENSE)
 [![Data license](https://img.shields.io/badge/data-CC_BY--SA_4.0-lightgrey)](data/README.md#source-and-license)
 
@@ -9,7 +10,9 @@ FarSense is a benchmark for context-grounded commonsense reasoning in Farsi (Per
 Each of its 4,210 scenarios is an everyday narrative rewritten from a Farsi Wikipedia
 passage, paired with six kinds of reasoning tasks. This repository contains the dataset
 and all the code behind the paper: building the benchmark, fine-tuning open models,
-evaluating open and API models, and computing the reported scores.
+evaluating open and API models, and computing the reported scores. The dataset and the six
+fine-tuned LoRA adapters are on the Hugging Face Hub in the
+[FarSense collection](https://huggingface.co/collections/Kamyar-zeinalipour/farsense-ijcnlp-aacl-2025-6af4553f756c4d246fe7f56c).
 
 | | |
 |---|---|
@@ -23,6 +26,7 @@ evaluating open and API models, and computing the reported scores.
 
 - [Tasks](#tasks)
 - [The data](#the-data)
+- [Fine-tuned adapters](#fine-tuned-adapters)
 - [Repository layout](#repository-layout)
 - [Setup](#setup)
 - [Reproducing the paper](#reproducing-the-paper)
@@ -65,6 +69,27 @@ print(test.loc[0, "target"])  # {"true_false_1_answer_predict": true}
 The same split is on the Hugging Face Hub as
 [`Kamyar-zeinalipour/CS_Farsi`](https://huggingface.co/datasets/Kamyar-zeinalipour/CS_Farsi).
 Field descriptions, label distribution and notes are in the [data card](data/README.md).
+
+## Fine-tuned adapters
+
+The LoRA adapters from the paper are on the Hugging Face Hub, each with a model card that
+reports its per-task scores:
+
+| Base model | Params | Adapter | Overall (base → fine-tuned) |
+|---|---:|---|---|
+| [Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) | 1B | [FarSense-Llama-3.2-1B-Instruct-LoRA](https://huggingface.co/Kamyar-zeinalipour/FarSense-Llama-3.2-1B-Instruct-LoRA) | 0.227 → **0.450** |
+| [Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct) | 3B | [FarSense-Llama-3.2-3B-Instruct-LoRA](https://huggingface.co/Kamyar-zeinalipour/FarSense-Llama-3.2-3B-Instruct-LoRA) | 0.449 → **0.529** |
+| [Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) | 8B | [FarSense-Llama-3.1-8B-Instruct-LoRA](https://huggingface.co/Kamyar-zeinalipour/FarSense-Llama-3.1-8B-Instruct-LoRA) | 0.598 → **0.642** |
+| [Mistral-7B-Instruct-v0.3](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3) | 7B | [FarSense-Mistral-7B-Instruct-v0.3-LoRA](https://huggingface.co/Kamyar-zeinalipour/FarSense-Mistral-7B-Instruct-v0.3-LoRA) | 0.496 → **0.649** |
+| [Mistral-Nemo-Instruct-2407](https://huggingface.co/mistralai/Mistral-Nemo-Instruct-2407) | 12B | [FarSense-Mistral-Nemo-Instruct-2407-LoRA](https://huggingface.co/Kamyar-zeinalipour/FarSense-Mistral-Nemo-Instruct-2407-LoRA) | 0.604 → **0.654** |
+| [Mistral-Small-24B-Instruct-2501](https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501) | 24B | [FarSense-Mistral-Small-24B-Instruct-2501-LoRA](https://huggingface.co/Kamyar-zeinalipour/FarSense-Mistral-Small-24B-Instruct-2501-LoRA) | 0.627 → **0.672** |
+
+Evaluate a released adapter directly, without training:
+
+```bash
+python inference/generate.py --model meta-llama/Llama-3.2-1B-Instruct \
+  --adapter Kamyar-zeinalipour/FarSense-Llama-3.2-1B-Instruct-LoRA
+```
 
 ## Repository layout
 
@@ -200,7 +225,8 @@ API models, zero-shot (Table 9):
 | GPT-4o | 0.860 | 0.494 | 0.677 |
 | Qwen-Plus | 0.845 | 0.481 | 0.663 |
 
-Per-task scores for every model are in [`paper_results/`](paper_results/).
+Per-task scores for every model are in [`paper_results/`](paper_results/) and on each
+[adapter's model card](#fine-tuned-adapters).
 
 ## Building the benchmark
 
