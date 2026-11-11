@@ -43,30 +43,11 @@ ds = load_dataset(
 | `prompt` | The full model input: task instructions (English), the scenario and the question (Farsi), and the required JSON answer format |
 | `target` | Gold answer as the one-field JSON the prompt asks for, e.g. `{"multiple_choice_question_answer_predict": "B"}`. This is the string used for fine-tuning and scoring. |
 | `answer_key` | Name of the field inside `target` (without `_predict`) |
-| `answer` | The gold value on its own (`True`/`False`, `A`–`D`, or Farsi text) |
+| `answer` | The gold value on its own (`True`/`False`, `A`–`D`, or Farsi text). Multiple-choice options labelled الف/ب/ج/د are given as A–D |
 
 `true_false_1` is the statement written to be true and `true_false_2` the one written to
 be false (T/F-True and T/F-False in the paper). The scenario itself appears in `prompt`
 after `Context (Farsi):`.
-
-## Label distribution
-
-| Task | Train | Test |
-|---|---|---|
-| multiple_choice | A 23 · B 3,816 · C 151 · D 10 | A 1 · B 198 · C 11 |
-| true_false_1 | True 3,861 · False 139 | True 205 · False 5 |
-| true_false_2 | False 3,878 · True 122 | False 205 · True 5 |
-
-## Notes
-
-- **Persian option letters.** In 132 multiple-choice items the options are labelled
-  الف/ب/ج/د instead of A–D, and the gold answer in `target` uses the Persian letter.
-  `answer` maps them to A–D (الف→A, ب→B, ج→C, د→D); `target` is kept as used in the paper.
-- **True/False #2 key name.** The prompt template for `true_false_2` asks the model for the
-  key `true_false_1_answer_predict`, while its `target` uses `true_false_2_answer_predict`.
-  Scoring reads the value regardless of the key, so this does not affect results.
-- **Repeated items.** 12 training articles (in 5 groups) received identical generated
-  items, so 84 training rows repeat another row's prompt. The test split has none.
 
 ## Source and license
 

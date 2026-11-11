@@ -68,7 +68,7 @@ print(test.loc[0, "target"])  # {"true_false_1_answer_predict": true}
 
 The same split is on the Hugging Face Hub as
 [`Kamyar-zeinalipour/CS_Farsi`](https://huggingface.co/datasets/Kamyar-zeinalipour/CS_Farsi).
-Field descriptions, label distribution and notes are in the [data card](data/README.md).
+Field descriptions are in the [data card](data/README.md).
 
 ## Fine-tuned adapters
 
